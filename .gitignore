@@ -1,0 +1,7 @@
+__pycache__
+todo_env
+instance/
+*.pyc
+.DS_Store
+
+
