@@ -39,4 +39,4 @@
 > POST /logout : Logout the user
 
 
->> THANK YOU! <<
+THANK YOU!
