@@ -11,7 +11,7 @@
 ### Run the app.py file
 > flask run
 
-### It will run on localhost (127.0.0.1)
+### It will run on localhost (127.0.0.1:5000)
 
 ### Postman for testing API's
 > create 2 collections in postman _1.todo_ _2.user_
@@ -39,4 +39,4 @@
 > POST /logout : Logout the user
 
 
-THANK YOU!
+>> THANK YOU! 

@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 
 from db import db
-from models import TodoModel
+from models import TodoModel, UserModel
 
 blp = Blueprint("todos", __name__, description="Operations on todo")
 
@@ -16,17 +16,21 @@ class TodoHome(MethodView):
         return 'Welcome To TODO APP!'
 
 
-@blp.route('/todo')
+@blp.route('/user/<int:user_id>/todo')
 class TodoList(MethodView):
+    # List task
     @jwt_required()
     @blp.response(200, TodoSchema(many=True))
-    def get(self):
-        return TodoModel.query.all()
+    def get(self, user_id):
+        user = UserModel.query.get_or_404(user_id)
+        todo_list = [todo for todo in user.todorel]
+        return todo_list
 
+    # Add task
     @jwt_required(fresh=True)
     @blp.arguments(TodoSchema)
     @blp.response(201, TodoSchema)
-    def post(self, todo_data):
+    def post(self, todo_data, user_id):
         todo = TodoModel(**todo_data)
         try:
             db.session.add(todo)
@@ -42,12 +46,13 @@ class TodoList(MethodView):
         return todo
 
 
-@blp.route('/todo/<int:todo_id>')
+@blp.route('/user/<int:user_id>/todo/<int:todo_id>')
 class TodoUpdate(MethodView):
     @jwt_required()
     @blp.arguments(TodoUpdateSchema)
-    def put(self, todo_data, todo_id):
-        todo = TodoModel.query.get(todo_id)
+    def put(self, todo_data, todo_id, user_id):
+        user = UserModel.query.get_or_404(user_id)
+        todo = TodoModel.query.filter_by(id=todo_id, user=user).first_or_404()
         if todo:
             todo.title = todo_data["title"]
             todo.status = todo_data["status"]
@@ -57,11 +62,14 @@ class TodoUpdate(MethodView):
         db.session.add(todo)
         db.session.commit()
 
-        return {"message": "Updated successfully"}
+        return {"message": "Task Updated successfully"}
 
     @jwt_required()
-    def delete(self, todo_id):
-        todo = TodoModel.query.get_or_404(todo_id)
+    def delete(self, todo_id, user_id):
+        user = UserModel.query.get_or_404(user_id)
+        todo = TodoModel.query.filter_by(
+            todo_id=todo_id, user=user
+        ).first_or_404()
         db.session.delete(todo)
         db.session.commit()
         return {"message": "Task deleted."}

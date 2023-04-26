@@ -2,6 +2,7 @@
 from flask import Flask, jsonify
 from flask_smorest import Api
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 
 from resources.todo import blp as TodoBlueprint
 from resources.user import blp as UserBlueprint
@@ -23,6 +24,7 @@ app.config["OPENAPI_SWAGGER_UI_URL"] = \
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
+migrate = Migrate(app, db)
 api = Api(app)
 
 app.config["JWT_SECRET_KEY"] = "cbvfhfehhdvbvcxxsdjvberwvdbhgfeyufvbdhv"
