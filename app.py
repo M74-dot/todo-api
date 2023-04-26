@@ -59,7 +59,7 @@ def revoked_token_callback(jwt_header, jwt_payload):
             }
         ),
         401,
-    )
+    )    
 
 
 @jwt.expired_token_loader
