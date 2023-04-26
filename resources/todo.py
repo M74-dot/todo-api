@@ -24,7 +24,7 @@ class TodoList(MethodView):
     def get(self, user_id):
         user = UserModel.query.get_or_404(user_id)
         todo_list = [todo for todo in user.todorel]
-        return todo_list
+        return todo_list, 200
 
     # Add task
     @jwt_required(fresh=True)
