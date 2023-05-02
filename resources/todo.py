@@ -19,15 +19,16 @@ class TodoHome(MethodView):
 @blp.route('/user/<int:user_id>/todo')
 class TodoList(MethodView):
     # List task
-    @jwt_required()
+    # @jwt_required()
     @blp.response(200, TodoSchema(many=True))
     def get(self, user_id):
         user = UserModel.query.get_or_404(user_id)
-        todo_list = [todo for todo in user.todorel]
+        # todo_list = [todo for todo in user.todorel]
+        todo_list = [todo for todo in user.todos]
         return todo_list, 200
 
     # Add task
-    @jwt_required(fresh=True)
+    # @jwt_required(fresh=True)
     @blp.arguments(TodoSchema)
     @blp.response(201, TodoSchema)
     def post(self, todo_data, user_id):
@@ -64,7 +65,7 @@ class TodoUpdate(MethodView):
 
         return {"message": "Task Updated successfully"}
 
-    @jwt_required()
+    # @jwt_required()
     def delete(self, todo_id, user_id):
         user = UserModel.query.get_or_404(user_id)
         todo = TodoModel.query.filter_by(

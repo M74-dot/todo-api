@@ -10,4 +10,4 @@ class TodoModel(db.Model):
     user_id = db.Column(
         db.Integer, db.ForeignKey("users.id"), unique=False, nullable=False
     )
-    user = db.relationship("UserModel", back_populates="todorel")
+    # user = db.relationship("UserModel", back_populates="todorel")
